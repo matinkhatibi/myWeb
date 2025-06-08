@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="800.jpeg" type="image/jpeg">
+
+    <title>هلدینگ کرانه - آینده‌ای روشن در سواحل قشم</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Vazirmatn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles and Tailwind Configuration -->
+    <style>
+        /* Applying the Vazirmatn font to the entire site */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        /* Smooth scrolling behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Service card hover effect */
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero iframe styling */
+        .hero-iframe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Prevents user interaction with the background video */
+        }
+        .hero-iframe-container iframe {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 aspect ratio */
+            min-height: 100vh;
+            min-width: 177.77vh; /* 16:9 aspect ratio */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+
+    <!-- Header -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="text-2xl font-bold text-sky-700">
+                    هلدینگ کرانه
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8 space-x-reverse">
+                    <a href="#hero" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">صفحه اصلی</a>
+                    <a href="#about" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">درباره ما</a>
+                    <a href="#services" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">خدمات</a>
+                    <a href="#projects" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">پروژه‌ها</a>
+                    <a href="#contact" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">تماس با ما</a>
+                </nav>
+                
+                <!-- CTA Button -->
+                <a href="#contact" class="hidden md:block bg-sky-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-sky-700 transition-all duration-300 shadow-lg shadow-sky-600/20">
+                    ارتباط با ما
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden">
+                    <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200">
+             <a href="#hero" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">صفحه اصلی</a>
+             <a href="#about" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">درباره ما</a>
+             <a href="#services" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">خدمات</a>
+             <a href="#projects" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">پروژه‌ها</a>
+             <a href="#contact" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">تماس با ما</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section with Aparat Video -->
+        <section id="hero" class="relative text-white min-h-[calc(100vh-80px)] flex items-center overflow-hidden bg-black">
+            <!-- Aparat Iframe Container -->
+            <div class="hero-iframe-container">
+                <iframe 
+                    src="https://www.aparat.com/video/video/embed/videohash/j40wcdz/vt/frame?startTime=3&muted=true&autoplay=true&loop=true" 
+                    title="مستند کوتاه «کرانه» قشم ، سرزمین عجایب" 
+                    allow="autoplay; muted" 
+                    allowfullscreen="true" 
+                    webkitallowfullscreen="true" 
+                    mozallowfullscreen="true"
+                ></iframe>
+            </div>
+            
+            <!-- Overlay to ensure text readability -->
+            <div class="absolute inset-0 bg-black/50 z-10"></div>
+
+            <!-- Content -->
+            <div class="container mx-auto px-6 text-center relative z-20">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+                    هلدینگ کرانه
+                </h1>
+                <p class="text-lg md:text-2xl font-light max-w-3xl mx-auto mb-8">
+                    سرمایه‌گذاری، توسعه و خلق آینده‌ای روشن در قلب سواحل زیبای جزیره قشم
+                </p>
+                <a href="#about" class="bg-white text-sky-700 px-8 py-3 rounded-lg font-bold text-lg hover:bg-slate-100 transition-all duration-300 transform hover:scale-105">
+                    بیشتر بدانید
+                </a>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1">
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-6">درباره هلدینگ کرانه</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed mb-4">
+                            هلدینگ کرانه یک مجموعه پیشرو در زمینه سرمایه‌گذاری و توسعه پروژه‌های کلان در جزیره قشم است. ما با تکیه بر دانش تخصصی، تیم مجرب و درک عمیق از پتانسیل‌های منطقه، فرصت‌های منحصر به فردی برای رشد و پیشرفت خلق می‌کنیم.
+                        </p>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            چشم‌انداز ما، تبدیل شدن به معتبرترین نام در توسعه پایدار و مدرن در قشم، با تمرکز بر پروژه‌هایی است که هم ارزش اقتصادی دارند و هم به ارتقای کیفیت زندگی و حفظ محیط زیست کمک می‌کنند.
+                        </p>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <img src="800.jpeg" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/FFFFFF?text=Image+Not+Found';" 
+                             alt="تصویری از دفتر یا پروژه هلدینگ کرانه" class="rounded-xl shadow-2xl w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-20 md:py-28 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">خدمات اصلی ما</h2>
+                    <p class="text-lg text-slate-500 max-w-2xl mx-auto">ما در زمینه‌های متنوعی فعالیت می‌کنیم تا بهترین بازدهی را برای سرمایه‌گذاران و شرکای خود به ارمغان آوریم.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 service-card">
+                        <div class="bg-sky-100 text-sky-600 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-3">سرمایه‌گذاری کلان</h3>
+                        <p class="text-slate-600 leading-relaxed">جذب و مدیریت سرمایه‌های بزرگ برای اجرای پروژه‌های زیرساختی، تجاری و گردشگری.</p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 service-card">
+                        <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m2-8h1m-1 4h1m-1 4h1m-5-4h1m-1 4h1"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-3">توسعه املاک و مستغلات</h3>
+                        <p class="text-slate-600 leading-relaxed">طراحی و ساخت مجتمع‌های مسکونی، تجاری و اداری مدرن با بالاترین استانداردها.</p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 service-card">
+                        <div class="bg-amber-100 text-amber-600 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-3">پروژه‌های گردشگری</h3>
+                        <p class="text-slate-600 leading-relaxed">ایجاد و توسعه هتل‌ها، مراکز تفریحی و جاذبه‌های توریستی برای رونق صنعت گردشگری جزیره.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">پروژه‌های شاخص</h2>
+                    <p class="text-lg text-slate-500 max-w-2xl mx-auto">نگاهی به برخی از تلاش‌های ما برای ساختن آینده‌ای بهتر.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/05/14.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه ساحلی کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-0 right-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold">معماری </h3>
+                            <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2">مرکزی مدرن برای خرید و سرگرمی</p>
+                        </div>
+                    </div>
+                    <!-- Project Card 2 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-32.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه مسکونی کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-0 right-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold">طراحی شهری</h3>
+                            <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2">زندگی لوکس با منظره دریا</p>
+                        </div>
+                    </div>
+                    <!-- Project Card 3 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-157.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه گردشگری کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-0 right-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold">بازرگانی مصالح در صنعت ساختمان</h3>
+                            <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2">میزبانی در سطح جهانی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 md:py-28 bg-slate-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">با ما در ارتباط باشید</h2>
+                    <p class="text-lg text-slate-500 max-w-2xl mx-auto">برای مشاوره، همکاری یا کسب اطلاعات بیشتر، از راه‌های زیر با ما تماس بگیرید.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg">
+                    <form>
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <input type="text" placeholder="نام و نام خانوادگی" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <input type="email" placeholder="ایمیل شما" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        </div>
+                        <textarea placeholder="پیام شما..." rows="6" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500 mb-6"></textarea>
+                        <div class="text-left">
+                           <button type="submit" class="bg-sky-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-sky-700 transition-all duration-300 shadow-lg shadow-sky-600/30">
+                               ارسال پیام
+                           </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- About -->
+                <div class="col-span-1">
+                    <h3 class="text-xl font-bold mb-4">هلدینگ کرانه</h3>
+                    <p class="text-slate-400">پیشرو در سرمایه‌گذاری و توسعه پایدار در جزیره قشم.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">دسترسی سریع</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-slate-400 hover:text-white transition-colors">درباره ما</a></li>
+                        <li><a href="#services" class="text-slate-400 hover:text-white transition-colors">خدمات</a></li>
+                        <li><a href="#projects" class="text-slate-400 hover:text-white transition-colors">پروژه‌ها</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">اطلاعات تماس</h3>
+                    <ul class="space-y-3 text-slate-400">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            <span>جزیره قشم - بلوارآزادگان حدفاصل میدان شهدا و چهاراه سعدی ساختمان تاک طبقه دوم</span>
+                        </li>
+                         <li class="flex items-center">
+                            <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                            <span class="text-left" dir="ltr">+۹۸ (۷۶) ۱۲۳۴ ۵۶۷۸</span>
+                        </li>
+                         <li class="flex items-center">
+                            <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                            <span>info@karanehholding.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-700 mt-8 pt-8 text-center text-slate-500">
+                <p>&copy; 2025 هلدینگ کرانه. تمام حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a, #header a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Check if it's a link to an anchor on the same page
+                if (link.getAttribute('href').startsWith('#')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
