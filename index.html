@@ -28,7 +28,7 @@
         }
         
         /* Service card hover effect */
-        .service-card:hover {
+        .service-card:hover, .team-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
         }
@@ -63,8 +63,11 @@
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
-                <a href="#" class="text-2xl font-bold text-sky-700">
-                    هلدینگ کرانه
+                <a href="#" class="flex items-center gap-3">
+                    <img src="800.jpeg" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/FFFFFF?text=L';" 
+                         alt="لوگو هلدینگ کرانه" class="h-10 w-10 rounded-full">
+                    <span class="text-2xl font-bold text-sky-700">هلدینگ کرانه</span>
                 </a>
                 
                 <!-- Desktop Navigation -->
@@ -73,6 +76,7 @@
                     <a href="#about" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">درباره ما</a>
                     <a href="#services" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">خدمات</a>
                     <a href="#projects" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">پروژه‌ها</a>
+                    <a href="#team" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">تیم ما</a>
                     <a href="#contact" class="text-slate-600 hover:text-sky-600 transition-colors duration-300">تماس با ما</a>
                 </nav>
                 
@@ -94,6 +98,7 @@
              <a href="#about" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">درباره ما</a>
              <a href="#services" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">خدمات</a>
              <a href="#projects" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">پروژه‌ها</a>
+             <a href="#team" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">تیم ما</a>
              <a href="#contact" class="block text-center py-3 px-4 text-slate-600 hover:bg-sky-50">تماس با ما</a>
         </div>
     </header>
@@ -198,7 +203,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Project Card 1 -->
                     <div class="group relative rounded-xl overflow-hidden shadow-lg">
-                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/05/14.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه ساحلی کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/05/14.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه ساحلی کرانه" class="w-full h-[450px] object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                         <div class="absolute bottom-0 right-0 p-6 text-white">
                             <h3 class="text-2xl font-bold">معماری </h3>
@@ -207,7 +212,7 @@
                     </div>
                     <!-- Project Card 2 -->
                     <div class="group relative rounded-xl overflow-hidden shadow-lg">
-                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-32.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه مسکونی کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-32.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه مسکونی کرانه" class="w-full h-[450px] object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                         <div class="absolute bottom-0 right-0 p-6 text-white">
                             <h3 class="text-2xl font-bold">طراحی شهری</h3>
@@ -216,7 +221,7 @@
                     </div>
                     <!-- Project Card 3 -->
                     <div class="group relative rounded-xl overflow-hidden shadow-lg">
-                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-157.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه گردشگری کرانه" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="https://karanehqeshm.ir/wp-content/uploads/2021/11/%D8%A7%D8%B1%D8%B4%DB%8C%D9%88-%DA%A9%D8%B1%D8%A7%D9%86%D9%87-157.png" onerror="this.onerror=null;this.src='https://placehold.co/600x800/cccccc/FFFFFF?text=Image+Not+Found';" alt="پروژه گردشگری کرانه" class="w-full h-[450px] object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                         <div class="absolute bottom-0 right-0 p-6 text-white">
                             <h3 class="text-2xl font-bold">بازرگانی مصالح در صنعت ساختمان</h3>
@@ -226,21 +231,51 @@
                 </div>
             </div>
         </section>
+
+        <!-- Team Section -->
+        <section id="team" class="py-20 md:py-28 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">آشنایی با تیم ما</h2>
+                    <p class="text-lg text-slate-500 max-w-2xl mx-auto">موتور محرک هلدینگ کرانه، تیمی از متخصصان باانگیزه و باتجربه است.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                    <!-- Team Member 1 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 team-card text-center">
+                        <img src="https://placehold.co/128x128/e2e8f0/334155?text=شخص+۱" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/cccccc/FFFFFF?text=Error';"
+                             alt="عکس عضو تیم" class="w-32 h-32 rounded-full mx-auto mb-6 ring-4 ring-offset-4 ring-sky-200">
+                        <h3 class="text-2xl font-bold text-slate-800">دکتر حامد ایمان طلب</h3>
+                        <p class="text-sky-600 font-semibold mb-3">مدیر عامل</p>
+                        <p class="text-slate-600 leading-relaxed">لدکتری حفاظت معماری مدیر عامل هلدینگ بوم و طرح کرانه قشم ،عضو هئیت علمی گروه معماری دانشگاه آزاد اسلامیت.</p>
+                    </div>
+                    <!-- Team Member 2 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 team-card text-center">
+                        <img src="https://placehold.co/128x128/e2e8f0/334155?text=شخص+۲" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/cccccc/FFFFFF?text=Error';"
+                             alt="عکس عضو تیم" class="w-32 h-32 rounded-full mx-auto mb-6 ring-4 ring-offset-4 ring-green-200">
+                        <h3 class="text-2xl font-bold text-slate-800">مصطفی نوفرستی</h3>
+                        <p class="text-green-600 font-semibold mb-3">مدیر فنی</p>
+                        <p class="text-slate-600 leading-relaxed">کارشناس مهندسی شیمی و کارشناس ارشد مدیریت بازرگانی – مدیر طرح بنیاد خانه سازی.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         
         <!-- Contact Section -->
-        <section id="contact" class="py-20 md:py-28 bg-slate-100">
+        <section id="contact" class="py-20 md:py-28 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">با ما در ارتباط باشید</h2>
                     <p class="text-lg text-slate-500 max-w-2xl mx-auto">برای مشاوره، همکاری یا کسب اطلاعات بیشتر، از راه‌های زیر با ما تماس بگیرید.</p>
                 </div>
-                <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg">
+                <div class="max-w-4xl mx-auto bg-slate-50 p-8 md:p-12 rounded-xl shadow-lg border border-slate-200">
                     <form>
                         <div class="grid md:grid-cols-2 gap-6 mb-6">
-                            <input type="text" placeholder="نام و نام خانوادگی" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500">
-                            <input type="email" placeholder="ایمیل شما" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <input type="text" placeholder="نام و نام خانوادگی" class="w-full p-3 bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <input type="email" placeholder="ایمیل شما" class="w-full p-3 bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
-                        <textarea placeholder="پیام شما..." rows="6" class="w-full p-3 bg-slate-100 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500 mb-6"></textarea>
+                        <textarea placeholder="پیام شما..." rows="6" class="w-full p-3 bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 mb-6"></textarea>
                         <div class="text-left">
                            <button type="submit" class="bg-sky-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-sky-700 transition-all duration-300 shadow-lg shadow-sky-600/30">
                                ارسال پیام
@@ -269,6 +304,7 @@
                         <li><a href="#about" class="text-slate-400 hover:text-white transition-colors">درباره ما</a></li>
                         <li><a href="#services" class="text-slate-400 hover:text-white transition-colors">خدمات</a></li>
                         <li><a href="#projects" class="text-slate-400 hover:text-white transition-colors">پروژه‌ها</a></li>
+                        <li><a href="#team" class="text-slate-400 hover:text-white transition-colors">تیم ما</a></li>
                     </ul>
                 </div>
 
@@ -276,8 +312,8 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">اطلاعات تماس</h3>
                     <ul class="space-y-3 text-slate-400">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                        <li class="flex items-start">
+                             <svg class="w-5 h-5 ml-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                             <span>جزیره قشم - بلوارآزادگان حدفاصل میدان شهدا و چهاراه سعدی ساختمان تاک طبقه دوم</span>
                         </li>
                          <li class="flex items-center">
