@@ -1,816 +1,436 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بازی کارتی کازینو دیجیتال</title>
-    
+<title>دایره ارتباط</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600&display=swap">
+<style>
+/* layout: stage (circle of identical numbers) beside a quiet dock with three tabs: آمار, تحلیل هوشمند (risk model), تنظیمات.
+   Flat and calm. Arrows get a background-colored casing so crossings stay readable; hovering lifts one number's arrows to a top layer. */
+:root{
+  --bg:#f6f7f9; --surf:#ffffff; --ink:#1f2430; --mut:#667085; --line:#e4e7ec; --soft:#eff1f5;
+  --acc:#4c63c9; --ok:#3b9a6b; --bad:#cf5a52; --node:#e9ecf7; --nstroke:#b7bed6;
+  --r0:#2f8a5d; --r1:#9a6f0c; --r2:#b85414; --r3:#c0453d;
+  --f:Vazirmatn,"Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13151a; --surf:#1a1d24; --ink:#e8eaef; --mut:#9aa1b1; --line:#2a2e38; --soft:#232730;
+  --acc:#8d9ef0; --ok:#5dbb8b; --bad:#e5786f; --node:#2a2f49; --nstroke:#4b5278;
+  --r0:#5dbb8b; --r1:#e0b04a; --r2:#ee9457; --r3:#ee7b72; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13151a; --surf:#1a1d24; --ink:#e8eaef; --mut:#9aa1b1; --line:#2a2e38; --soft:#232730;
+  --acc:#8d9ef0; --ok:#5dbb8b; --bad:#e5786f; --node:#2a2f49; --nstroke:#4b5278;
+  --r0:#5dbb8b; --r1:#e0b04a; --r2:#ee9457; --r3:#ee7b72; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.6;padding-inline:16px;padding-block:20px 40px}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.app{max-width:1180px;margin-inline:auto;display:grid;gap:16px}
+@media(min-width:960px){.app{grid-template-columns:minmax(0,1fr) 430px;align-items:start}.stage{position:sticky;top:16px}}
+h1{grid-column:1/-1;margin:0;font-size:1.1rem;font-weight:600}
+h3{margin:0;font-size:.8rem;font-weight:600;color:var(--mut)}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:16px;min-width:0}
+.stage{padding:14px;display:grid;gap:10px}
+.bar,.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
+.step{display:flex;align-items:center;gap:8px;color:var(--mut)}
+.step button{width:2rem;height:2rem;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:1.1rem;line-height:1;transition:background .15s}
+.step button:hover{background:var(--soft)}
+.step input{width:3.6rem;text-align:center;font-size:1.05rem;font-weight:600}
+input[type=number],textarea{background:transparent;border:1px solid var(--line);border-radius:8px;padding:5px 8px;min-width:0}
+.legend{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:.8rem;flex-wrap:wrap}
+.sw{width:18px;height:2px;border-radius:2px;background:var(--ok)}
+.sw.r{background:var(--bad);height:3px;margin-inline-start:8px}
+.hint{margin:0;min-height:1.6em;text-align:center;color:var(--mut);font-size:.85rem}
+.btn{background:transparent;border:1px solid var(--line);border-radius:8px;padding:5px 12px;transition:background .15s}
+.btn:hover:not(:disabled){background:var(--soft)}
+.acts{display:flex;gap:6px}
+.seg{display:inline-grid;grid-auto-flow:column;gap:2px;padding:3px;background:var(--soft);border-radius:10px}
+.seg button{border:0;background:transparent;color:var(--mut);padding:3px 10px;border-radius:8px;font-size:.8rem;font-weight:600;transition:background .15s,color .15s}
+.seg button[aria-pressed=true]{background:var(--surf);color:var(--ink);box-shadow:0 1px 2px #0002}
 
-<script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Import Vazirmatn for Farsi and Orbitron for digital headings */
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&family=Orbitron:wght:400;700;900&display=swap');
-        
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #0d111c; /* Darker blue-black */
-            color: #e0e7ff; /* Light bluish-white */
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto; /* Allow vertical scroll if necessary */
-            /* Background Casino/Digital Haze Effect */
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="35" font-family="Arial" font-size="20" fill="%232b3b55" opacity="0.1">$</text><text x="60" y="70" font-family="Arial" font-size="20" fill="%232b3b55" opacity="0.1">₿</text><text x="35" y="80" font-family="Arial" font-size="20" fill="%232b3b55" opacity="0.1">€</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="80" y="20" font-family="Arial" font-size="20" fill="%232b3b55" opacity="0.1">₮</text><text x="20" y="60" font-family="Arial" font-size="20" fill="%232b3b55" opacity="0.1">£</text></svg>');
-            background-repeat: repeat;
-            background-size: 150px, 150px;
-            background-position: 0 0, 75px 75px; 
-            animation: bg-scroll 60s linear infinite;
-        }
+/* circle */
+svg{display:block;width:min(100%,640px,calc(100vh - 240px));min-width:min(100%,320px);aspect-ratio:1;margin-inline:auto;direction:ltr;overflow:visible}
+.guide{fill:none;stroke:var(--line);stroke-width:1}
+#eg,#ov{pointer-events:none}
+.nd{cursor:pointer;outline:none}
+.nd .body{fill:var(--node);stroke:var(--nstroke);stroke-width:1.5;transition:stroke .15s}
+.nd:hover .body,.nd:focus-visible .body{stroke:var(--ink)}
+.nd.sel .body{stroke:var(--ink);stroke-width:2.5}
+.nd .num{fill:var(--ink);font-family:var(--f);font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.eg{opacity:.9;transition:opacity .18s}
+.eg path{fill:none;stroke-linecap:round}
+.eg .cs{stroke:var(--surf);stroke-width:5}
+.eg .ln{stroke-width:1.5}
+.eg.o .ln{stroke:var(--ok)}.eg.m .ln{stroke:var(--bad);stroke-width:2.1}
+.foc #eg .eg{opacity:.1}
+.only #eg{visibility:hidden}
+#ov .eg{opacity:1;animation:fade .15s ease-out}
+#ov .eg.o .ln{stroke-width:2.2}#ov .eg.m .ln{stroke-width:2.8}
+.eg.in{animation:fade .35s ease-out}
+@keyframes fade{from{opacity:0}}
+.gh{stroke:var(--mut);stroke-width:1.2;stroke-dasharray:3 4;pointer-events:none}
 
-        @keyframes bg-scroll {
-            from { background-position: 0 0, 75px 75px; }
-            to { background-position: 150px 150px, 225px 225px; }
-        }
+/* dock */
+.dock{padding:12px;display:grid;gap:14px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;background:var(--soft);border-radius:10px}
+.tabs button{border:0;background:transparent;color:var(--mut);padding:6px;border-radius:8px;font-weight:600;transition:background .15s,color .15s}
+.tabs button[aria-selected=true]{background:var(--surf);color:var(--ink);box-shadow:0 1px 2px #0002}
+.pane{display:grid;gap:14px;animation:fade .2s}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+.sum div{display:grid}
+.sum div+div{border-inline-start:1px solid var(--line)}
+.sum b{font-size:1.25rem;font-weight:600}
+.sum span{font-size:.75rem;color:var(--mut)}
+table{width:100%;border-collapse:collapse}
+th{padding:6px 8px;font-size:.78rem;font-weight:600;color:var(--mut);text-align:center;white-space:nowrap;border-bottom:1px solid var(--line)}
+th button{all:unset;cursor:pointer;border-radius:4px}
+th button:hover{color:var(--ink)}
+th button:focus-visible{outline:2px solid var(--acc)}
+th.on{color:var(--ink)}
+th.on button::after{content:" " attr(data-dir);font-size:.65em}
+td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.z{color:var(--mut);opacity:.6}
+tbody tr{cursor:pointer;transition:background .12s}
+tbody tr:hover,tbody tr.hv{background:var(--soft)}
+tbody tr.on{background:var(--soft);box-shadow:inset -3px 0 0 var(--acc)}
+.ch{display:inline-grid;place-items:center;min-width:1.7rem;height:1.7rem;padding-inline:3px;border-radius:50%;background:var(--node);border:1px solid var(--nstroke);font-size:.8rem;font-weight:600}
+.det,.card{display:grid;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px}
+.dh{display:flex;align-items:center;gap:8px;font-weight:600}
+.ll{display:grid;grid-template-columns:5.2rem 1fr;gap:8px;align-items:start;font-size:.85rem;color:var(--mut)}
+.ll div{display:flex;flex-wrap:wrap;gap:4px;color:var(--ink)}
+.pill{display:inline-block;padding:0 9px;border-radius:999px;font-size:.75rem;font-weight:600;white-space:nowrap;color:var(--lv);border:1px solid color-mix(in srgb,var(--lv) 40%,transparent);background:color-mix(in srgb,var(--lv) 9%,transparent)}
+.verdict{display:flex;align-items:center;gap:10px;font-size:.88rem}
+.verdict p{margin:0}
+.pr{display:inline-flex;align-items:center;gap:3px;direction:ltr}
+.pr i{font-style:normal;color:var(--bad);font-size:.8rem}
+.ailist{display:grid}
+.air{display:grid;grid-template-columns:1.2rem 1.8rem minmax(0,1fr);gap:8px;align-items:start;padding:9px 6px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .12s}
+.air:last-child{border-bottom:0}
+.air:hover,.air.hv{background:var(--soft)}
+.air.on{background:var(--soft);box-shadow:inset -3px 0 0 var(--acc)}
+.rkn{color:var(--mut);font-size:.78rem;padding-top:3px;text-align:center}
+.am{display:grid;gap:5px;min-width:0}
+.top{display:flex;align-items:center;gap:8px}
+.role{color:var(--mut);font-size:.8rem}
+.sc{margin-inline-start:auto;font-size:.95rem;font-variant-numeric:tabular-nums}
+.bar2{height:5px;border-radius:3px;background:var(--soft);overflow:hidden}
+.bar2 i{display:block;height:100%;border-radius:3px;background:var(--lv);transition:width .3s}
+.why{margin:0;font-size:.78rem;color:var(--mut)}
+.note{margin:0;color:var(--mut);font-size:.8rem}
+.grp{display:grid;gap:10px}
+.rg{display:grid;grid-template-columns:1fr auto;gap:2px 8px;color:var(--mut);font-size:.85rem}
+.rg output{color:var(--ink);font-variant-numeric:tabular-nums}
+.rg input{grid-column:1/-1;width:100%}
+input[type=range]{accent-color:var(--acc)}
+.cls{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+.cls label{display:flex;align-items:center;gap:8px}
+input[type=color]{width:32px;height:24px;padding:0;border:1px solid var(--line);border-radius:6px;background:none}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+summary{cursor:pointer;color:var(--mut)}
+details[open] summary{margin-block-end:8px}
+details>*+*{margin-block-start:8px}
+textarea{width:100%;font-size:.75rem;resize:vertical;direction:ltr;font-family:ui-monospace,Menlo,monospace}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 
-        h1, h2, h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: #fcd34d; /* Amber-300 for titles */
-        }
-        
-        /* Optimized Card Size for Mobile - KEPT COMPACT */
-        .card {
-            width: 80px; 
-            height: 110px; 
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 5px;
-            font-size: 24px; 
-            font-weight: 900; 
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border 0.2s ease-out;
-            background: linear-gradient(145deg, #1f2937, #2c3e50); 
-            border: 2px solid #374151; 
-            position: relative;
-            overflow: hidden; 
-        }
-        
-        @media (min-width: 640px) { /* Restore larger size on tablets/desktops */
-            .card {
-                width: 90px;
-                height: 120px;
-                font-size: 26px;
-                border-radius: 12px;
-            }
-        }
+<div class="app" id="app" dir="rtl">
+  <h1>دایره ارتباط</h1>
 
-        .card.active {
-            border-color: #818cf8; 
-            box-shadow: 0 0 20px rgba(129, 140, 248, 0.6); 
-        }
-        .card.active:hover {
-            transform: translateY(-5px) scale(1.05); 
-            box-shadow: 0 0 30px rgba(129, 140, 248, 0.8), 0 10px 20px rgba(0, 0, 0, 0.5);
-        }
+  <main class="stage box">
+    <div class="bar">
+      <div class="step">عدد مرکز
+        <button id="cm" aria-label="کمتر">−</button>
+        <input id="c" type="number" min="1" max="12" inputmode="numeric" aria-label="عدد مرکز">
+        <button id="cp" aria-label="بیشتر">+</button>
+      </div>
+      <div class="legend"><i class="sw"></i>یک‌طرفه: نشانه‌ی خطر<i class="sw r"></i>دوطرفه: خطر جدی</div>
+    </div>
+    <svg id="s" role="group" aria-label="دایره اعداد"></svg>
+    <p class="hint" id="hint" aria-live="polite"></p>
+    <div class="foot">
+      <div class="acts"><button class="btn" id="undo">واگرد</button><button class="btn" id="redo">از نو</button></div>
+      <div class="seg" id="vw"><button data-v="all">همه فلش‌ها</button><button data-v="sel">فقط فلش‌های یک عدد</button></div>
+      <button class="btn" id="clr">پاک‌کردن فلش‌ها</button>
+    </div>
+  </main>
 
-        .card span {
-            z-index: 1;
-            position: relative;
-        }
-        .card::before { 
-            content: '';
-            position: absolute;
-            top: 3px; left: 3px; right: 3px; bottom: 3px; 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px; 
-            z-index: 0;
-        }
+  <aside class="dock box">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="stats">آمار</button>
+      <button role="tab" data-tab="ai">تحلیل هوشمند</button>
+      <button role="tab" data-tab="style">تنظیمات</button>
+    </nav>
 
-        .red-suit { color: #ef4444; } 
-        .black-suit { color: #f9fafb; } 
-        
-        /* Table Card (Slightly larger but responsive) */
-        #table-card-display {
-            width: 96px; 
-            height: 128px; 
-            font-size: 40px;
-        }
-        @media (min-width: 640px) {
-            #table-card-display {
-                width: 112px; 
-                height: 144px; 
-                font-size: 50px;
-            }
-        }
+    <section class="pane" id="p-stats">
+      <div class="sum" id="sum"></div>
+      <table id="tb">
+        <thead><tr>
+          <th><button data-k="n">عدد</button></th>
+          <th><button data-k="out">ارسالی</button></th>
+          <th><button data-k="in">دریافتی</button></th>
+          <th><button data-k="mut">دوطرفه</button></th>
+          <th><button data-k="risk">خطر</button></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="det" id="det"></div>
+    </section>
 
-        /* Card back */
-        .card-back {
-            background: linear-gradient(145deg, #2563eb, #3b82f6); 
-            border: 2px solid #1e40af; 
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
-        }
-        .card-back::before {
-             background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 5px, transparent 5px, transparent 10px);
-             border: none;
-        }
-        .card-back:hover {
-            transform: none;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
-        }
+    <section class="pane" id="p-ai" hidden>
+      <div class="card" id="aisum"></div>
+      <div class="foot"><h3>ارزیابی هر عدد</h3>
+        <div class="seg" id="aisort"><button data-s="risk">بیشترین خطر</button><button data-s="n">ترتیب عدد</button></div></div>
+      <div class="ailist" id="ailist"></div>
+      <p class="note">این بخش یک مدل امتیازدهی با قاعده‌های روشن است، نه یک مدل زبانی. فلش ورودی یعنی عدد هدف نشانه است و فلش خروجی یعنی عدد منبع آن است. نوع فلش، تعداد، تراکم همسایه‌ها و فاصله از میانگین شبکه در امتیاز اثر دارند. وزن‌ها را در تنظیمات عوض کنید.</p>
+    </section>
 
-        /* Particle effect */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        /* Buttons styling - optimized padding */
-        /* Reduced vertical padding (py-2 instead of py-3 on small screens) */
-        .btn-primary, .btn-danger, .btn-success, .btn-warning {
-            @apply px-4 py-2 sm:px-6 sm:py-2 rounded-lg font-bold transition duration-200 shadow-lg text-sm sm:text-base;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(90deg, #3b82f6, #2563eb); 
-            color: #e0e7ff;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #2563eb, #1d4ed8); 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(90deg, #ef4444, #dc2626); 
-            color: #e0e7ff;
-        }
-        .btn-danger:hover {
-            background: linear-gradient(90deg, #dc2626, #b91c1c); 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(90deg, #22c55e, #16a34a); 
-            color: #e0e7ff;
-        }
-        .btn-success:hover {
-            background: linear-gradient(90deg, #16a34a, #15803d); 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(90deg, #fcd34d, #fbbf24); 
-            color: #1f2937; 
-        }
-        .btn-warning:hover {
-            background: linear-gradient(90deg, #fbbf24, #f59e0b); 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .pass-overlay-content {
-            background: linear-gradient(135deg, #1e293b, #0f172a); 
-            border: 2px solid #3b82f6; 
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); 
-            color: #e0e7ff;
-        }
-
-    </style>
-</head>
-<!-- Use p-3 instead of p-4 for general container padding -->
-<body class="p-3 min-h-screen flex flex-col items-center justify-center">
-
-    <canvas id="particle-canvas"></canvas>
-
-    
-
-<div id="game-container" class="w-full max-w-xl bg-gray-900 bg-opacity-80 rounded-2xl shadow-2xl p-3 sm:p-5 transition-all duration-300 relative z-10 border border-blue-900">
-        
-        <!-- Scoreboard - Aggressively reduced margin -->
-        <div id="scoreboard" class="flex justify-between items-center text-gray-200 mb-3 pb-2 border-b border-gray-700">
-            <div class="flex items-center">
-                <span class="text-base sm:text-lg font-bold" id="player-a-name"></span>
-                <span class="text-xl sm:text-2xl font-extrabold text-amber-400 ml-1 flex items-center">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-1 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5 9a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 4a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm7-1a1 1 0 100 2h1a1 1 0 100-2h-1z"></path></svg>
-                    <span id="player-a-score">0</span>
-                </span>
-            </div>
-            <div class="text-center">
-                <span class="text-xs font-semibold text-gray-400">دور</span>
-                <span class="text-2xl font-black text-blue-400 block" id="round-num">1</span>
-            </div>
-            <div class="flex items-center">
-                <span class="text-xl sm:text-2xl font-extrabold text-amber-400 mr-1 flex items-center">
-                    <span id="player-b-score">0</span>
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5 9a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 4a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm7-1a1 1 0 100 2h1a1 1 0 100-2h-1z"></path></svg>
-                </span>
-                <span class="text-base sm:text-lg font-bold" id="player-b-name"></span>
-            </div>
-        </div>
-
-        <!-- Game Area -->
-        <div id="game-area">
-            
-            <!-- Table Card Display - Reduced margin -->
-            <div class="flex flex-col items-center mb-4">
-                <p class="text-sm sm:text-base font-semibold text-gray-300 mb-2" id="table-card-label">کارت روی میز</p>
-                <!-- Custom sizes defined in CSS for table card -->
-                <div id="table-card-display" class="card card-back flex items-center justify-center text-blue-200">
-                    <span id="table-card-content">؟</span>
-                </div>
-            </div>
-
-            <!-- Status Message - Reduced padding and margin -->
-            <div class="text-center p-2 mb-4 rounded-lg bg-blue-800 bg-opacity-40 text-blue-200 font-semibold text-sm border border-blue-600 shadow-inner" id="status-message">
-                لطفاً برای شروع بازی اقدام کنید.
-            </div>
-
-            <!-- Player Action Area -->
-            <div id="player-action-area">
-                
-
+    <section class="pane" id="p-style" hidden>
+      <div class="grp"><h3>ظاهر</h3><div id="rgs" class="grp"></div></div>
+      <div class="grp"><h3>رنگ فلش‌ها</h3>
+        <div class="cls">
+          <label><input type="color" id="gc"> یک‌طرفه</label>
+          <label><input type="color" id="rc"> دوطرفه</label>
+          <button class="btn" id="rcr">پیش‌فرض</button>
+        </div></div>
+      <div class="grp"><h3>وزن‌ها در مدل تحلیل</h3><div id="rgw" class="grp"></div></div>
+      <div class="grp"><h3>داده</h3>
+        <div id="rgd" class="grp"></div>
+        <button class="btn" id="rnd">اتصال تصادفی</button>
+        <details><summary>ذخیره و بارگذاری</summary>
+          <textarea id="js" rows="5" dir="ltr" spellcheck="false" placeholder="JSON را اینجا بچسبانید"></textarea>
+          <div class="g2"><button class="btn" id="cj">کپی JSON</button><button class="btn" id="ld">بارگذاری</button></div>
+        </details>
+        <p class="note">صفحه با داده‌ی نمونه شروع می‌شود. تغییرات در همین مرورگر ذخیره می‌شود.</p>
+      </div>
+    </section>
+  </aside>
 </div>
 
-            <!-- Result Message Area - Reduced margin -->
-            <div id="result-message-area" class="hidden text-center p-3 mt-4 rounded-xl shadow-2xl bg-gradient-to-br from-green-900 to-emerald-900 border border-green-700">
-                <h3 id="winner-name" class="text-xl sm:text-2xl font-black mb-1 text-green-300 drop-shadow-lg"></h3>
-                <p id="winner-reason" class="text-sm text-gray-200 mb-3"></p>
-                <button onclick="startNewRound()" class="btn-success text-base">
-                    دست بعد
-                </button>
-            </div>
+<script>
+const $=id=>document.getElementById(id),svg=$('s');
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const fa=x=>String(x).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫');
+const D={n:12,c:6,curve:.3,nr:22,rot:0,gc:null,rc:null,rd:18,tab:'stats',view:'all',wm:3,wi:1.5,wo:1,sort:'risk'};
+const SEED=['6>3','3>6','6>9','9>2','2>9','1>6','4>6','6>11','11>6','7>1','1>7','8>12','12>8','5>6','10>4','2>5','12>6','3>9'];
+const TABS=['stats','ai','style'];
+const LV=[['کم','--r0'],['متوسط','--r1'],['زیاد','--r2'],['بحرانی','--r3']];
+const lvOf=s=>s<25?0:s<50?1:s<75?2:3;
+const lvInfo=(lv)=>lv<0?['بدون نشانه','--mut']:LV[lv];
+const RG=[['n','تعداد اعداد',3,24,1,fa],['nr','اندازه عدد',14,30,1,fa],['curve','انحنای فلش‌ها',0,.8,.05,v=>fa(Math.round(v*100))+'٪'],['rot','چرخش',0,360,1,v=>fa(v)+'°']];
+const RW=[['wm','دوطرفه (خطر جدی)',1,6,.5,fa],['wi','فلش ورودی (عدد هدف است)',0,4,.5,fa],['wo','فلش خروجی (عدد منبع است)',0,4,.5,fa]];
+const RD=[['rd','تراکم اتصال تصادفی',3,60,1,v=>fa(v)+'٪']];
 
-        </div>
+let V={...D},E=new Set(SEED),hist=[],fut=[],a=null,hov=null,pin=null,gp=null,P={},flashT='',ft=0,fresh=null,sort={k:'n',d:1},AS=null;
+try{const j=JSON.parse(localStorage.getItem('rc4'));if(j){Object.assign(V,j.V);E=new Set(j.E)}}catch{}
+const save=()=>{try{localStorage.setItem('rc4',JSON.stringify({V,E:[...E]}))}catch{}};
+const clampV=()=>{V.n=clamp(Math.round(V.n)||12,3,24);V.c=clamp(Math.round(V.c)||1,1,V.n);if(a!==null&&a>V.n)a=null;if(pin!==null&&pin>V.n)pin=null;if(!TABS.includes(V.tab))V.tab='stats';if(V.view!=='sel')V.view='all';if(V.sort!=='n')V.sort='risk'};
+clampV();
+const chip=i=>`<span class="ch">${fa(i)}</span>`;
+const ids=n=>[...Array(n)].map((_,i)=>i+1);
+const L=()=>[...E].map(k=>k.split('>').map(Number)).filter(([x,y])=>x<=V.n&&y<=V.n&&x!==y);
 
-        <!-- Name Input Form (Initial screen) - Reduced vertical spacing -->
-        <form id="name-input-form" class="mt-4">
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-amber-300 text-center drop-shadow-md">نام بازیکنان را وارد کنید</h2>
-            <div class="space-y-3">
-                <input type="text" id="p1-name" placeholder="نام بازیکن اول" required 
-                       class="w-full p-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-100 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-inner" value="بازیکن الف">
-                <input type="text" id="p2-name" placeholder="نام بازیکن دوم" required 
-                       class="w-full p-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-100 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-inner" value="بازیکن ب">
-            </div>
-            <button type="submit" class="mt-4 w-full btn-primary text-base">
-                شروع بازی
-            </button>
-        </form>
+/* history */
+const snap=()=>JSON.stringify([...E]);
+function mutate(fn){hist.push(snap());if(hist.length>100)hist.shift();fut=[];fn();clampV();save();syncUI();renderAll()}
+function undo(){if(!hist.length)return;fut.push(snap());E=new Set(JSON.parse(hist.pop()));save();renderAll()}
+function redo(){if(!fut.length)return;hist.push(snap());E=new Set(JSON.parse(fut.pop()));save();renderAll()}
+function toggle(x,y){mutate(()=>{const k=x+'>'+y;if(E.has(k))E.delete(k);else{E.add(k);fresh=Math.min(x,y)+'-'+Math.max(x,y)}})}
 
-    </div>
-    
-    <!-- Pass-and-Play Overlay - Reduced padding and font size -->
-    <div id="pass-overlay" class="fixed inset-0 bg-gray-950 bg-opacity-90 hidden flex flex-col items-center justify-center z-50 p-3">
-        <div class="pass-overlay-content p-6 rounded-xl text-center max-w-sm w-full transform transition-all duration-300 scale-100">
-            <h3 class="text-2xl font-black text-blue-400 mb-3 drop-shadow-lg" id="next-player-name-overlay">نوبت بازیکن</h3>
-            <p class="text-lg text-gray-200 mb-5">لطفاً دستگاه را به <span class="font-bold text-blue-200" id="next-player-role-overlay"></span> تحویل دهید.</p>
-            <button onclick="hidePassOverlay()" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-black rounded-full hover:from-blue-600 hover:to-blue-800 transition duration-300 shadow-xl animate-pulse text-base">
-                آماده‌ام!
-            </button>
-        </div>
-    </div>
+/* risk model: one-way arrow = warning sign, mutual = serious danger; incoming (target) and outgoing (source) weighted differently;
+   local density = how many of a number's neighbours also point at each other; compared with the network mean. */
+function assess(){
+  const n=V.n,ls=L(),S=new Set(ls.map(([x,y])=>x+'>'+y)),I={};
+  ids(n).forEach(i=>I[i]={i,mut:0,inO:0,outO:0,nb:new Set()});
+  for(const[x,y]of ls){I[x].nb.add(y);I[y].nb.add(x);if(S.has(y+'>'+x))I[x].mut++;else{I[x].outO++;I[y].inO++}}
+  const A=ids(n).map(i=>{
+    const o=I[i],nb=[...o.nb],raw=V.wm*o.mut+V.wi*o.inO+V.wo*o.outO;
+    let c=0;if(nb.length>=2){let k=0;for(const p of nb)for(const q of nb)if(p!==q&&S.has(p+'>'+q))k++;c=k/(nb.length*(nb.length-1))}
+    const score=Math.round(100*(1-Math.exp(-raw*(1+.5*c)/8)));
+    return{...o,raw,c,k:nb.length,score,lv:score?lvOf(score):-1,out:o.mut+o.outO,inn:o.mut+o.inO};
+  });
+  const mean=A.reduce((s,o)=>s+o.raw,0)/n,meanScore=A.reduce((s,o)=>s+o.score,0)/n;
+  A.forEach(o=>{
+    o.role=!o.k?'بدون نشانه':(o.mut>0&&o.mut>=o.inO+o.outO)?'درگیر دوطرفه':o.inO>o.outO?'هدف نشانه':o.outO>o.inO?'منبع نشانه':'متعادل';
+    const w=[];
+    if(o.mut)w.push(`${fa(o.mut)} ارتباط دوطرفه (خطر جدی)`);
+    if(o.inO)w.push(`${fa(o.inO)} فلش ورودی`);
+    if(o.outO)w.push(`${fa(o.outO)} فلش خروجی`);
+    if(o.k>=3&&o.c>=.3)w.push(`همسایه‌ها به هم هم فلش دارند (تراکم ${fa(Math.round(o.c*100))}٪)`);
+    if(o.raw>0&&mean>0){const r=o.raw/mean;if(r>=1.5)w.push(`${fa(r.toFixed(1))} برابر میانگین شبکه`);else if(r<=.5)w.push('کمتر از نصف میانگین شبکه')}
+    o.why=w.length?w:['هیچ فلشی ندارد'];
+  });
+  const order=[...A].sort((p,q)=>q.score-p.score||q.mut-p.mut||q.inO-p.inO||p.i-q.i);
+  order.forEach((o,k)=>o.rank=k+1);
+  const tot=ls.length,mp=ls.filter(([x,y])=>x<y&&S.has(y+'>'+x));
+  return{A,by:Object.fromEntries(A.map(o=>[o.i,o])),order,tot,mp,dens:tot/(n*(n-1)),net:Math.round(.5*order[0].score+.5*meanScore)};
+}
 
-    <script>
-        // ---- Game Config and Logic (Persian comments used only for readability) ----
+/* circle */
+const mk=(id,c)=>`<marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M2 1.5L8 5L2 8.5" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(${c})"/></marker>`;
+function edgeList(){
+  const c=V.c,k=V.curve,out=[],slots={};
+  for(const[x,y]of L()){
+    const m=E.has(y+'>'+x);if(m&&x>y)continue;
+    const A=P[x],B=P[y],mx=(A.x+B.x)/2,my=(A.y+B.y)/2;let cx=mx,cy=my;
+    if(x!==c&&y!==c){
+      const a=P[Math.min(x,y)],b=P[Math.max(x,y)],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1;
+      const mm=Math.hypot(mx,my),ap=Math.max(mm*(1-k/2),P[c].r+22);
+      const ux=mm>1?mx/mm:-dy/len,uy=mm>1?my/mm:dx/len;
+      cx=2*ap*ux-mx;cy=2*ap*uy-my;
+    }
+    const e={x,y,m,cx,cy};out.push(e);
+    (slots[x]=slots[x]||[]).push({e,s:1,ang:Math.atan2(cy-A.y,cx-A.x)});
+    (slots[y]=slots[y]||[]).push({e,s:0,ang:Math.atan2(cy-B.y,cx-B.x)});
+  }
+  for(const i in slots){
+    const s=slots[i].sort((p,q)=>p.ang-q.ang),sep=Math.min(.3,2*Math.PI*.8/s.length);
+    let prev=-Infinity,sh=0;
+    s.forEach(o=>{o.a2=Math.max(o.ang,prev+sep);prev=o.a2;sh+=o.a2-o.ang});sh/=s.length;
+    s.forEach(o=>{o.e[o.s?'sa':'ta']=o.a2-sh});
+  }
+  return out;
+}
+function edgeSvg(e,isNew){
+  const A=P[e.x],B=P[e.y],g1=A.r+(e.m?5:3),g2=B.r+5;
+  const d=`M${A.x+Math.cos(e.sa)*g1} ${A.y+Math.sin(e.sa)*g1}Q${e.cx} ${e.cy} ${B.x+Math.cos(e.ta)*g2} ${B.y+Math.sin(e.ta)*g2}`;
+  return`<g class="eg ${e.m?'m':'o'}${isNew?' in':''}" data-a="${e.x}" data-b="${e.y}"><path class="cs" d="${d}"/><path class="ln" d="${d}" marker-end="url(#${e.m?'mm':'mo'})"${e.m?' marker-start="url(#mm)"':''}/></g>`;
+}
+function renderSvg(){
+  const fo=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.n;
+  const{n,c,nr}=V,R=Math.max(140,(n-1)*(nr*2+16)/(2*Math.PI)),fr=fresh;fresh=null;
+  P={};P[c]={x:0,y:0,r:nr};
+  ids(n).filter(i=>i!==c).forEach((i,k,arr)=>{const an=(V.rot-90+k*360/arr.length)*Math.PI/180;P[i]={x:R*Math.cos(an),y:R*Math.sin(an),r:nr}});
+  const half=R+nr+22;
+  svg.setAttribute('viewBox',`${-half} ${-half} ${half*2} ${half*2}`);
+  let h=`<defs>${mk('mo','--ok')}${mk('mm','--bad')}</defs><circle class="guide" r="${R}"/><g id="eg">`;
+  h+=edgeList().map(e=>edgeSvg(e,Math.min(e.x,e.y)+'-'+Math.max(e.x,e.y)===fr)).join('')+'</g><g id="ov"></g>';
+  for(const i in P){const p=P[i];
+    h+=`<g class="nd${+i===a?' sel':''}" data-n="${i}" transform="translate(${p.x} ${p.y})" tabindex="0" role="button" aria-label="عدد ${fa(i)}"><circle class="body" r="${p.r}"/><text class="num" style="font-size:${p.r*.68}px">${fa(i)}</text></g>`;}
+  h+=`<line id="gh" class="gh" visibility="hidden"/>`;
+  svg.innerHTML=h;
+  if(fo){const el=svg.querySelector(`[data-n="${fo}"]`);if(el)el.focus({preventScroll:true})}
+  applyFocus();ghost();
+}
+function applyFocus(){
+  const f=hov!==null?hov:a!==null?a:pin!==null?pin:(V.view==='sel'?V.c:null);
+  svg.classList.toggle('foc',f!==null);svg.classList.toggle('only',V.view==='sel');
+  const ov=svg.querySelector('#ov');if(!ov)return;
+  const els=f===null?[]:[...svg.querySelectorAll('#eg .eg')].filter(g=>+g.dataset.a===f||+g.dataset.b===f);
+  ov.replaceChildren(...els.map(g=>{const k=g.cloneNode(true);k.classList.remove('in');return k}));
+}
+function markRows(){document.querySelectorAll('#tbody tr,.air').forEach(r=>r.classList.toggle('hv',+r.dataset.n===hov))}
+function setHov(h){if(h===hov)return;hov=h;applyFocus();markRows()}
+function ghost(){
+  const g=svg.querySelector('#gh');if(!g)return;
+  if(a===null||!gp||!P[a]){g.setAttribute('visibility','hidden');return}
+  g.setAttribute('x1',P[a].x);g.setAttribute('y1',P[a].y);g.setAttribute('x2',gp[0]);g.setAttribute('y2',gp[1]);g.setAttribute('visibility','visible');
+}
+function pick(i){
+  if(a===null){a=i;renderAll();return}
+  if(a===i){a=null;renderAll();return}
+  const x=a,k=x+'>'+i,had=E.has(k);a=null;toggle(x,i);
+  const m=E.has(k)&&E.has(i+'>'+x);
+  flash(had?`فلش ${fa(x)} به ${fa(i)} حذف شد`:m?`${fa(x)} و ${fa(i)} دوطرفه شدند (خطر جدی)`:`${fa(x)} به ${fa(i)} وصل شد`);
+}
+svg.addEventListener('click',e=>{const g=e.target.closest('.nd');if(g)pick(+g.dataset.n);else if(a!==null){a=null;renderAll()}});
+svg.addEventListener('keydown',e=>{const g=e.target.closest('.nd');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pick(+g.dataset.n)}});
+svg.addEventListener('pointerover',e=>{const g=e.target.closest('.nd');setHov(g?+g.dataset.n:null)});
+svg.addEventListener('pointerleave',()=>{setHov(null);gp=null;ghost()});
+svg.addEventListener('pointermove',e=>{const m=svg.getScreenCTM();if(!m||a===null)return;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());gp=[p.x,p.y];ghost()});
+svg.addEventListener('animationend',e=>e.target.classList&&e.target.classList.remove('in'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&a!==null){a=null;renderAll()}});
 
-        const suits = ['♥', '♦', '♣', '♠'];
-        const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+/* rows shared by table and risk list */
+function rowEvents(el,sel){
+  el.addEventListener('click',e=>{const r=e.target.closest(sel);if(!r)return;const i=+r.dataset.n;pin=pin===i?null:i;renderDock();applyFocus()});
+  el.addEventListener('pointerover',e=>{const r=e.target.closest(sel);setHov(r?+r.dataset.n:null)});
+  el.addEventListener('pointerleave',()=>setHov(null));
+}
 
-        let gameState = {
-            players: [], 
-            roundNum: 0,
-            
-            p2RolePlayer: null, 
-            p3RolePlayer: null, 
-            p2Hand: [],
-            p3Hand: [],
-            tableCard: null,
-            p2KeptCard: null,
-            p2Choice: null, 
-            p3KeptCard: null,
-            
-            currentTurnPlayerId: null,
-            roundState: 'INIT' 
-        };
+/* stats tab */
+function renderStats(){
+  const n=V.n,pc=x=>fa(Math.round(x*100))+'٪',{by,tot,mp,dens}=AS;
+  $('sum').innerHTML=[[fa(tot),'فلش'],[fa(mp.length),'جفت دوطرفه'],[pc(dens),'تراکم'],[pc(tot?2*mp.length/tot:0),'دوسویگی']].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('');
+  const val={n:i=>i,out:i=>by[i].out,in:i=>by[i].inn,mut:i=>by[i].mut,risk:i=>by[i].score}[sort.k];
+  const order=ids(n).sort((x,y)=>(sort.k==='n'?val(x)-val(y):val(y)-val(x))*sort.d||x-y);
+  const cell=(v,st='')=>`<td${st}>${v?fa(v):'<span class="z">–</span>'}</td>`;
+  $('tbody').innerHTML=order.map(i=>{const o=by[i];return`<tr data-n="${i}"${pin===i?' class="on"':''}><td>${chip(i)}</td>${cell(o.out)}${cell(o.inn)}${cell(o.mut)}${cell(o.score,` style="color:var(${lvInfo(o.lv)[1]});font-weight:600"`)}</tr>`}).join('');
+  document.querySelectorAll('#tb th').forEach(th=>{
+    const b=th.querySelector('button'),on=b.dataset.k===sort.k;th.classList.toggle('on',on);
+    b.dataset.dir=on?((sort.k==='n')===(sort.d>0)?'▲':'▼'):'';
+  });
+  const f=pin!==null?pin:V.c,o=by[f],others=ids(n).filter(i=>i!==f),E_=(x,y)=>E.has(x+'>'+y);
+  const ln=(k,arr)=>`<div class="ll"><span>${k} <b>${fa(arr.length)}</b></span><div>${arr.map(chip).join('')||'<span class="z">—</span>'}</div></div>`;
+  const [lb,cv]=lvInfo(o.lv);
+  $('det').innerHTML=`<div class="dh">${chip(f)}<span>عدد ${fa(f)}</span><span class="pill" style="--lv:var(${cv})">${lb}</span></div>`+
+    ln('ارسالی',others.filter(i=>E_(f,i)&&!E_(i,f)))+ln('دریافتی',others.filter(i=>E_(i,f)&&!E_(f,i)))+ln('دوطرفه',others.filter(i=>E_(i,f)&&E_(f,i)));
+  markRows();
+}
+rowEvents($('tbody'),'tr');
+$('tb').querySelector('thead').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.k;sort=k===sort.k?{k,d:-sort.d}:{k,d:1};renderStats()});
 
-        // --- Core Card Value Functions ---
+/* risk tab */
+function renderAI(){
+  const{A,order,tot,mp,dens,net}=AS,n=V.n,pc=x=>fa(Math.round(x*100))+'٪';
+  const hi=A.filter(o=>o.lv>=2).length,top=order[0],[nl,nc]=tot?LV[lvOf(net)]:lvInfo(-1);
+  const sentence=tot?`${fa(hi)} عدد در سطح زیاد یا بحرانی. پرخطرترین عدد: ${fa(top.i)} با امتیاز ${fa(top.score)}.${dens>.35?' شبکه متراکم است.':''}`:'هنوز فلشی کشیده نشده است.';
+  const pairs=mp.slice(0,12).map(([x,y])=>`<span class="pr">${chip(x)}<i>⇄</i>${chip(y)}</span>`).join('')+(mp.length>12?`<span class="z">+${fa(mp.length-12)}</span>`:'');
+  $('aisum').innerHTML=`<div class="verdict" style="--lv:var(${nc})"><span class="pill">وضعیت کلی: ${nl}</span><p>${sentence}</p></div>`+
+    `<div class="sum">${[[fa(tot?top.score:0),'بیشترین امتیاز'],[fa(mp.length),'جفت خطر جدی'],[fa(tot-2*mp.length),'نشانه‌ی یک‌طرفه'],[pc(dens),'تراکم فلش‌ها']].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')}</div>`+
+    `<div class="ll"><span>جفت‌های خطر جدی</span><div>${pairs||'<span class="z">—</span>'}</div></div>`;
+  const list=V.sort==='risk'?order:A;
+  $('ailist').innerHTML=list.map(o=>{const[lb,cv]=lvInfo(o.lv);
+    return`<div class="air${pin===o.i?' on':''}" data-n="${o.i}" style="--lv:var(${cv})"><span class="rkn">${fa(o.rank)}</span>${chip(o.i)}<div class="am"><div class="top"><span class="pill">${lb}</span><span class="role">${o.role}</span><b class="sc">${fa(o.score)}</b></div><div class="bar2"><i style="width:${o.score}%"></i></div><p class="why">${o.why.join(' · ')}</p></div></div>`}).join('');
+  $('aisort').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===V.sort));
+  markRows();
+}
+rowEvents($('ailist'),'.air');
+$('aisort').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;V.sort=b.dataset.s;save();renderAI()});
 
-        function rankValues(rank) {
-            if (rank === 'A') return [1, 14];
-            if (rank === 'K') return [13];
-            if (rank === 'Q') return [12];
-            if (rank === 'J') return [11];
-            return [parseInt(rank)];
-        }
+/* controls */
+const rgHtml=l=>l.map(([k,lb,mn,mx,st])=>`<label class="rg"><span>${lb}</span><output id="o_${k}"></output><input id="r_${k}" type="range" min="${mn}" max="${mx}" step="${st}"></label>`).join('');
+$('rgs').innerHTML=rgHtml(RG);$('rgw').innerHTML=rgHtml(RW);$('rgd').innerHTML=rgHtml(RD);
+function onRange(e){const el=e.target;if(!el.id.startsWith('r_'))return;V[el.id.slice(2)]=+el.value;clampV();save();syncUI();renderAll()}
+['rgs','rgw','rgd'].forEach(id=>$(id).addEventListener('input',onRange));
+$('gc').addEventListener('input',e=>{V.gc=e.target.value;save();syncUI()});
+$('rc').addEventListener('input',e=>{V.rc=e.target.value;save();syncUI()});
+$('rcr').onclick=()=>{V.gc=V.rc=null;save();syncUI()};
+$('rnd').onclick=()=>mutate(()=>{E.clear();for(let i=1;i<=V.n;i++)for(let j=1;j<=V.n;j++)if(i!==j&&Math.random()*100<V.rd)E.add(i+'>'+j)});
+$('clr').onclick=()=>mutate(()=>E.clear());
+$('cj').onclick=async()=>{const j=JSON.stringify({n:V.n,c:V.c,edges:[...E]});$('js').value=j;try{await navigator.clipboard.writeText(j);flash('کپی شد')}catch{$('js').select();flash('کپی نشد. متن را دستی کپی کنید.')}};
+$('ld').onclick=()=>{try{
+  const j=JSON.parse($('js').value),ed=(Array.isArray(j.edges)?j.edges:[]).filter(k=>/^\d{1,2}>\d{1,2}$/.test(k));
+  mutate(()=>{E=new Set(ed);if(+j.n)V.n=+j.n;if(+j.c)V.c=+j.c});flash('بارگذاری شد');
+}catch{flash('JSON معتبر نیست')}};
+$('c').addEventListener('input',e=>{const v=Math.round(+e.target.value);if(v>=1&&v<=V.n){V.c=v;a=null;save();renderAll()}});
+$('c').addEventListener('blur',()=>{$('c').value=V.c});
+$('cm').onclick=()=>{V.c=V.c<=1?V.n:V.c-1;a=null;save();syncUI();renderAll()};
+$('cp').onclick=()=>{V.c=V.c>=V.n?1:V.c+1;a=null;save();syncUI();renderAll()};
+$('undo').onclick=undo;$('redo').onclick=redo;
+$('vw').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;V.view=b.dataset.v;save();syncUI();applyFocus();hint()});
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;V.tab=b.dataset.tab;save();showTab()});
 
-        function cardRankAndSuit(card) {
-            const rank = card.slice(0, -1);
-            const suit = card.slice(-1);
-            return { rank, suit };
-        }
-
-        function cardValues(card) {
-            return rankValues(cardRankAndSuit(card).rank);
-        }
-
-        function getSuitClass(suit) {
-            return (suit === '♥' || suit === '♦') ? 'red-suit' : 'black-suit';
-        }
-
-        // --- Game Logic Functions (Adapted from Python) ---
-
-        function bestDiffForDirection(cardVals, tableVals, direction) {
-            let best = null;
-            for (const c of cardVals) {
-                for (const t of tableVals) {
-                    let d = null;
-                    if (direction === "higher" && c > t) {
-                        d = c - t;
-                    } else if (direction === "lower" && c < t) {
-                        d = t - c;
-                    } else {
-                        continue;
-                    }
-                    if (best === null || d > best.diff) {
-                        best = { cardVal: c, tableVal: t, diff: d };
-                    }
-                }
-            }
-            return best;
-        }
-
-        function hasSum13(cardVals, tableVals) {
-            const normalizedCard = cardVals.map(v => v === 14 ? 1 : v);
-            const normalizedTable = tableVals.map(v => v === 14 ? 1 : v);
-            return normalizedCard.some(c => normalizedTable.some(t => c + t === 13));
-        }
-
-        function hasEquality(cardVals, tableVals) {
-            return cardVals.some(c => tableVals.some(t => c === t));
-        }
-
-        function determineWinner() {
-            const p2Card = gameState.p2KeptCard;
-            const p3Card = gameState.p3KeptCard;
-            const tableCard = gameState.tableCard;
-            const choice = gameState.p2Choice;
-
-            const valsP2 = cardValues(p2Card);
-            const valsP3 = cardValues(p3Card);
-            const valsTable = cardValues(tableCard);
-
-            const p2RolePlayer = gameState.players.find(p => p.id === gameState.p2RolePlayer);
-            const p3RolePlayer = gameState.players.find(p => p.id === gameState.p3RolePlayer);
-
-            let winnerId = null;
-            let reason = "";
-
-            // 1️⃣ Sum = 13 → automatic win
-            const p2Sum13 = hasSum13(valsP2, valsTable);
-            const p3Sum13 = hasSum13(valsP3, valsTable);
-            
-            if (p2Sum13 && !p3Sum13) {
-                winnerId = p2RolePlayer.id; reason = "مجموع کارت و کارت روی میز = ۱۳ (برد خودکار)";
-            } else if (p3Sum13 && !p2Sum13) {
-                winnerId = p3RolePlayer.id; reason = "مجموع کارت و کارت روی میز = ۱۳ (برد خودکار)";
-            } else if (p2Sum13 && p3Sum13) {
-                reason = "هر دو مجموع ۱۳ دارند &rarr; ادامه رقابت.";
-            }
-
-            // 2️⃣ Exact equality
-            if (winnerId === null) {
-                const p2Eq = hasEquality(valsP2, valsTable);
-                const p3Eq = hasEquality(valsP3, valsTable);
-                if (p2Eq && !p3Eq) {
-                    winnerId = p2RolePlayer.id; reason = "کارت با کارت روی میز برابر است (مزیت).";
-                } else if (p3Eq && !p2Eq) {
-                    winnerId = p3RolePlayer.id; reason = "کارت با کارت روی میز برابر است (مزیت).";
-                } else if (p2Eq && p3Eq) {
-                    reason = "هر دو برابر هستند &rarr; ادامه رقابت.";
-                }
-            }
-
-            // 3️⃣ Higher/Lower condition
-            if (winnerId === null) {
-                const dirn = choice.toLowerCase();
-                const p2Satisfy = valsP2.some(c => valsTable.some(t => dirn === "higher" ? c > t : c < t));
-                const p3Satisfy = valsP3.some(c => valsTable.some(t => dirn === "higher" ? c > t : c < t));
-
-                if (p2Satisfy && !p3Satisfy) {
-                    winnerId = p2RolePlayer.id; reason = `${p2RolePlayer.name} شرط ${choice} را برآورده کرد.`;
-                } else if (p3Satisfy && !p2Satisfy) {
-                    winnerId = p3RolePlayer.id; reason = `${p3RolePlayer.name} شرط ${choice} را برآورده کرد.`;
-                } else if (p2Satisfy && p3Satisfy) {
-                    const best2 = bestDiffForDirection(valsP2, valsTable, dirn);
-                    const best3 = bestDiffForDirection(valsP3, valsTable, dirn);
-                    const diff2 = best2 ? best2.diff : 0;
-                    const diff3 = best3 ? best3.diff : 0;
-
-                    if (diff2 > diff3) {
-                        winnerId = p2RolePlayer.id; reason = `هر دو شرط ${choice} را دارند، اما ${p2RolePlayer.name} اختلاف بیشتری دارد (${diff2} vs ${diff3}).`;
-                    } else if (diff3 > diff2) {
-                        winnerId = p3RolePlayer.id; reason = `هر دو شرط ${choice} را دارند، اما ${p3RolePlayer.name} اختلاف بیشتری دارد (${diff3} vs ${diff2}).`;
-                    } else {
-                        reason = "هر دو شرط را برآورده کردند و اختلاف برابر است &rarr; ادامه رقابت.";
-                    }
-                } else {
-                    reason = "هیچ&zwnj;کس شرط را برآورده نکرد &rarr; ادامه رقابت.";
-                }
-            }
-
-            // 4️⃣ Suit tiebreaker
-            if (winnerId === null) {
-                const suitTable = cardRankAndSuit(tableCard).suit;
-                const suit2 = cardRankAndSuit(p2Card).suit;
-                const suit3 = cardRankAndSuit(p3Card).suit;
-
-                const p2SuitMatch = suit2 === suitTable;
-                const p3SuitMatch = suit3 === suitTable;
-
-                if (p2SuitMatch && !p3SuitMatch) {
-                    winnerId = p2RolePlayer.id; reason = "لباس کارت بازیکن ۲ با کارت روی میز مطابقت دارد.";
-                } else if (p3SuitMatch && !p2SuitMatch) {
-                    winnerId = p3RolePlayer.id; reason = "لباس کارت بازیکن ۳ با کارت روی میز مطابقت دارد.";
-                } else {
-                    reason = "تساوی. (لباس&zwnj;های برابر یا نامساوی)";
-                }
-            }
-            
-            // Apply score
-            if (winnerId !== null) {
-                const winner = gameState.players.find(p => p.id === winnerId);
-                winner.score += 1;
-            }
-
-            gameState.roundState = 'END';
-            // Store the reason for display in renderGame
-            gameState.reason = reason;
-            renderGame();
-        }
-
-        // --- UI/Game Flow Functions ---
-
-        function createDeck() {
-            const deck = [];
-            for (const s of suits) {
-                for (const r of ranks) {
-                    deck.push(r + s);
-                }
-            }
-            // Shuffle
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
-            return deck;
-        }
-
-        function startNewRound() {
-            const deck = createDeck();
-            
-            // Swap roles every round
-            const pA = gameState.players[0];
-            const pB = gameState.players[1];
-            gameState.roundNum += 1;
-
-            if (gameState.roundNum % 2 !== 0) { // Round 1, 3, 5...: A is P2 (2 cards), B is P3 (3 cards)
-                gameState.p2RolePlayer = pA.id;
-                gameState.p3RolePlayer = pB.id;
-            } else { // Round 2, 4, 6...: B is P2 (2 cards), A is P3 (3 cards)
-                gameState.p2RolePlayer = pB.id;
-                gameState.p3RolePlayer = pA.id;
-            }
-            
-            // Deal cards
-            gameState.p2Hand = deck.splice(0, 2);
-            gameState.p3Hand = deck.splice(0, 3);
-            gameState.tableDeck = deck; // Remaining deck to draw table card from
-
-            // Reset round variables
-            gameState.tableCard = null;
-            gameState.p2KeptCard = null;
-            gameState.p2Choice = null;
-            gameState.p3KeptCard = null;
-            gameState.reason = ""; // Reset win reason
-
-            // Set initial turn
-            gameState.roundState = 'P2_CARD';
-            gameState.currentTurnPlayerId = gameState.p2RolePlayer;
-            
-            // Display pass-and-play overlay
-            showPassOverlay(gameState.currentTurnPlayerId);
-        }
-
-        function showPassOverlay(playerId) {
-            const player = gameState.players.find(p => p.id === playerId);
-            let roleDescription = '';
-            if (player.id === gameState.p2RolePlayer) {
-                roleDescription = 'بازیکن ۲ کارتی (انتخاب&zwnj;کننده شرط)';
-            } else if (player.id === gameState.p3RolePlayer) {
-                roleDescription = 'بازیکن ۳ کارتی';
-            } else {
-                roleDescription = 'جهت مشاهده نتیجه'; // For EVALUATION state
-            }
-            
-            document.getElementById('next-player-name-overlay').textContent = player ? player.name : 'همه بازیکنان';
-            document.getElementById('next-player-role-overlay').textContent = roleDescription;
-            document.getElementById('pass-overlay').classList.remove('hidden');
-        }
-
-        function hidePassOverlay() {
-            document.getElementById('pass-overlay').classList.add('hidden');
-            renderGame(); // Render game for the current player
-        }
-
-        function renderCard(card, id, isInteractive = false, onClickHandler = null) {
-            // Note: Card dimensions are set in CSS
-            if (!card) return `<div class="card card-back flex items-center justify-center text-5xl text-blue-200">؟</div>`;
-            
-            const { rank, suit } = cardRankAndSuit(card);
-            const suitClass = getSuitClass(suit);
-            const interactivityClass = isInteractive ? 'active cursor-pointer shadow-lg' : 'cursor-default';
-            const clickEvent = onClickHandler ? `onclick="event.stopPropagation(); ${onClickHandler}('${card}')"` : ''; 
-
-            return `
-                <div id="${id}" class="card ${interactivityClass}" ${clickEvent}>
-                    <span class="${suitClass} text-left text-xl sm:text-2xl">${rank}<br>${suit}</span>
-                    <span class="${suitClass} text-5xl sm:text-6xl text-center flex-grow flex items-center justify-center">${suit}</span>
-                    <span class="${suitClass} text-right text-xl sm:text-2xl transform rotate-180">${suit}<br>${rank}</span>
-                </div>
-            `;
-        }
-        
-        function renderHiddenCard() {
-            return `<div class="card card-back"></div>`;
-        }
-
-        function renderGame() {
-            const { players, p2RolePlayer, p3RolePlayer, currentTurnPlayerId, roundState } = gameState;
-            const pA = players[0];
-            const pB = players[1];
-            const p2Player = players.find(p => p.id === p2RolePlayer);
-            const p3Player = players.find(p => p.id === p3RolePlayer);
-            
-            const currentPlayer = currentTurnPlayerId ? players.find(p => p.id === currentTurnPlayerId) : null;
-
-            // Update Scoreboard
-            document.getElementById('player-a-name').textContent = pA.name;
-            document.getElementById('player-b-name').textContent = pB.name;
-            document.getElementById('player-a-score').textContent = pA.score;
-            document.getElementById('player-b-score').textContent = pB.score;
-            document.getElementById('round-num').textContent = gameState.roundNum;
-            
-            // Reset Displays
-            document.getElementById('table-card-display').innerHTML = '<span id="table-card-content">؟</span>';
-            // Reset table card class to default card-back state (defined in CSS)
-            document.getElementById('table-card-display').className = 'card card-back flex items-center justify-center text-blue-200'; 
-            document.getElementById('result-message-area').classList.add('hidden');
-            const actionArea = document.getElementById('player-action-area');
-            actionArea.innerHTML = '';
-            
-            let statusText = '';
-            let handHtml = '';
-
-            // --- Game State Rendering ---
-
-            if (roundState === 'P2_CARD') {
-                statusText = `نوبت ${p2Player.name} است. از دو کارت خود یکی را انتخاب کنید.`;
-                // Reduced mb-4 to mb-3
-                handHtml = `
-                    <p class="text-sm sm:text-lg font-bold mb-3 text-blue-300 text-center">کارت&zwnj;های شما:</p>
-                    <div class="flex justify-center space-x-3 sm:space-x-4">
-                        ${gameState.p2Hand.map(card => renderCard(card, `p2-card-${card}`, true, 'handleCardSelection')).join('')}
-                    </div>
-                `;
-            } else if (roundState === 'P2_CHOICE') {
-                statusText = `نوبت ${p2Player.name} است. شرط خود را انتخاب کنید (Higher/Lower).`;
-                // Reduced mb-4 to mb-3 and mb-6 to mb-4. Reduced mt-4 to mt-3
-                handHtml = `
-                    <p class="text-sm sm:text-lg font-bold mb-3 text-blue-300 text-center">کارت انتخابی شما:</p>
-                    <div class="flex justify-center mb-4">
-                        ${renderCard(gameState.p2KeptCard, 'p2-kept-card')}
-                    </div>
-                    <!-- Reduced space-y-3 to space-y-2 for tighter vertical fit on mobile -->
-                    <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-3">
-                        <button onclick="handleChoice('Higher')" class="btn-danger text-base">
-                            Higher (بیشتر)
-                        </button>
-                        <button onclick="handleChoice('Lower')" class="btn-success text-base">
-                            Lower (کمتر)
-                        </button>
-                    </div>
-                `;
-            } else if (roundState === 'P3_CARD') {
-                statusText = `نوبت ${p3Player.name} است. از سه کارت خود یکی را انتخاب کنید.`;
-                // Reduced mb-4 to mb-3
-                handHtml = `
-                    <p class="text-sm sm:text-lg font-bold mb-3 text-blue-300 text-center">کارت&zwnj;های شما:</p>
-                    <div class="flex justify-center space-x-3 sm:space-x-4">
-                        ${gameState.p3Hand.map(card => renderCard(card, `p3-card-${card}`, true, 'handleCardSelection')).join('')}
-                    </div>
-                `;
-            } else if (roundState === 'EVALUATION') {
-                // Draw Table Card (This happens once when entering EVALUATION state)
-                if (!gameState.tableCard) {
-                    gameState.tableCard = gameState.tableDeck.pop();
-                }
-                
-                // Final reveal of cards and table card
-                const tableCardHtml = renderCard(gameState.tableCard, 'table-final');
-                document.getElementById('table-card-display').innerHTML = tableCardHtml;
-                document.getElementById('table-card-display').className = 'card flex items-center justify-center';
-                
-                statusText = `شرط: <span class="text-amber-400">${gameState.p2Choice}</span>. کارت روی میز رونمایی شد. نتیجه را مشاهده کنید.`;
-
-                // Reduced p-4 to p-3, mt-4 to mt-3
-                handHtml = `
-                    <div class="flex justify-around items-start mt-3 p-3 bg-gray-800 rounded-xl border border-gray-700 shadow-inner">
-                        <div class="text-center">
-                            <p class="font-bold text-sm sm:text-base mb-1 text-blue-300">${p2Player.name} (P2)</p>
-                            ${renderCard(gameState.p2KeptCard, 'p2-kept-card-final')}
-                        </div>
-                        <div class="text-center">
-                            <p class="font-bold text-sm sm:text-base mb-1 text-blue-300">${p3Player.name} (P3)</p>
-                            ${renderCard(gameState.p3KeptCard, 'p3-kept-card-final')}
-                        </div>
-                    </div>
-                    <button onclick="determineWinner()" class="mt-4 w-full btn-warning text-base">
-                        مشاهده نتیجه
-                    </button>
-                `;
-            } else if (roundState === 'END') {
-                const pA = gameState.players[0];
-                const pB = gameState.players[1];
-                const winnerName = pA.score > pB.score ? pA.name : (pB.score > pA.score ? pB.name : 'تساوی');
-                
-                const tableCardHtml = renderCard(gameState.tableCard, 'table-final');
-                document.getElementById('table-card-display').innerHTML = tableCardHtml;
-                document.getElementById('table-card-display').className = 'card flex items-center justify-center';
-                
-                // Show result message
-                const resultArea = document.getElementById('result-message-area');
-                resultArea.classList.remove('hidden');
-                
-                if (winnerName === 'تساوی') {
-                    document.getElementById('winner-name').textContent = 'نتیجه: تساوی!';
-                    resultArea.className = resultArea.className.replace(/from-green-900.*border-green-700/g, 'from-yellow-900 to-amber-900 border-amber-700');
-                    document.getElementById('winner-name').classList.remove('text-green-300').classList.add('text-amber-300');
-                } else {
-                    document.getElementById('winner-name').textContent = `برنده: ${winnerName} 🎉`;
-                    resultArea.className = resultArea.className.replace(/from-yellow-900.*border-amber-700/g, 'from-green-900 to-emerald-900 border-green-700');
-                    document.getElementById('winner-name').classList.remove('text-amber-300').classList.add('text-green-300');
-                }
-                document.getElementById('winner-reason').innerHTML = gameState.reason; 
-                
-                statusText = 'بازی در انتظار شروع دست جدید است.';
-                // Reduced p-4 to p-3, mt-4 to mt-3
-                handHtml = `
-                    <div class="flex justify-around items-start mt-3 p-3 bg-gray-800 rounded-xl border border-gray-700 shadow-inner">
-                        <div class="text-center">
-                            <p class="font-bold text-sm sm:text-base mb-1 text-blue-300">${p2Player.name} (P2)</p>
-                            ${renderCard(gameState.p2KeptCard, 'p2-kept-card-final')}
-                        </div>
-                        <div class="text-center">
-                            <p class="font-bold text-sm sm:text-base mb-1 text-blue-300">${p3Player.name} (P3)</p>
-                            ${renderCard(gameState.p3KeptCard, 'p3-kept-card-final')}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            const isPlayersTurn = currentPlayer && currentTurnPlayerId === currentPlayer.id;
-            const showActionArea = roundState !== 'END' && (roundState === 'EVALUATION' || isPlayersTurn);
-
-            // Update Action Area based on the current player and state
-            actionArea.innerHTML = showActionArea ? handHtml : `
-                <!-- Reduced p-6 to p-4, text-lg to text-base -->
-                <div class="text-center p-4 bg-gray-800 rounded-xl border border-gray-700 shadow-inner">
-                    <p class="text-base font-bold text-blue-300">
-                        لطفاً دستگاه را به ${currentPlayer ? currentPlayer.name : 'بازیکن مربوطه'} تحویل دهید.
-                    </p>
-                </div>
-            `;
-            
-            // Final status message update
-            document.getElementById('status-message').innerHTML = statusText; 
-        }
-
-        // --- Event Handlers ---
-
-        document.getElementById('name-input-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const p1Name = document.getElementById('p1-name').value || 'بازیکن ۱';
-            const p2Name = document.getElementById('p2-name').value || 'بازیکن ۲';
-
-            gameState.players = [
-                { name: p1Name, score: 0, id: 'A' },
-                { name: p2Name, score: 0, id: 'B' }
-            ];
-
-            document.getElementById('name-input-form').classList.add('hidden');
-            document.getElementById('game-area').classList.remove('hidden');
-            startNewRound();
-        });
-
-        function handleCardSelection(card) {
-            if (gameState.roundState === 'P2_CARD') {
-                gameState.p2KeptCard = card;
-                gameState.currentTurnPlayerId = gameState.p2RolePlayer; 
-                gameState.roundState = 'P2_CHOICE';
-                renderGame();
-                
-            } else if (gameState.roundState === 'P3_CARD') {
-                gameState.p3KeptCard = card;
-                gameState.roundState = 'EVALUATION';
-                gameState.currentTurnPlayerId = null; 
-                
-                document.getElementById('next-player-name-overlay').textContent = 'مشاهده نتیجه';
-                document.getElementById('next-player-role-overlay').textContent = 'بر روی دکمه آماده&zwnj;ام کلیک کنید تا کارت روی میز رونمایی شود.';
-                document.getElementById('pass-overlay').classList.remove('hidden');
-            }
-        }
-        
-        function handleChoice(choice) {
-            if (gameState.roundState === 'P2_CHOICE') {
-                gameState.p2Choice = choice;
-                gameState.currentTurnPlayerId = gameState.p3RolePlayer;
-                gameState.roundState = 'P3_CARD';
-                showPassOverlay(gameState.currentTurnPlayerId);
-            }
-        }
-        
-        // --- Particle Effect ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const numParticles = 50; 
-        const particleSize = 1.5;
-        const particleSpeed = 0.5;
-        const particleColor = 'rgba(129, 140, 248, 0.4)'; 
-
-        function Particle(x, y) {
-            this.x = x;
-            this.y = y;
-            this.size = Math.random() * particleSize + 0.5;
-            this.speedX = (Math.random() * 1 - 0.5) * particleSpeed; 
-            this.speedY = (Math.random() * 1 - 0.5) * particleSpeed; 
-        }
-
-        Particle.prototype.update = function() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x < 0) this.x = canvas.width;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.y < 0) this.y = canvas.height;
-            if (this.y > canvas.height) this.y = 0;
-        };
-
-        Particle.prototype.draw = function() {
-            ctx.fillStyle = particleColor;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        };
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < numParticles; i++) {
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
-        }
-
-        function animateParticles() {
-            requestAnimationFrame(animateParticles);
-            ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-        }
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles(); 
-        }
-        
-        // --- Initialization ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('game-area').classList.add('hidden');
-            document.getElementById('status-message').innerHTML = 'نام بازیکنان را وارد کرده و شروع کنید.';
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            animateParticles();
-        });
-    </script>
-</body>
-</html>
+function flash(s){flashT=s;hint();clearTimeout(ft);ft=setTimeout(()=>{flashT='';hint()},2200)}
+function hint(){$('hint').textContent=flashT||(a!==null?'مقصد را انتخاب کنید. برای لغو Esc را بزنید.':V.view==='sel'?'فلش‌های یک عدد نمایش داده می‌شود. موس را روی هر عدد ببرید.':'روی یک عدد و بعد عدد دیگر بزنید تا فلش کشیده شود.')}
+function syncUI(){
+  [...RG,...RW,...RD].forEach(([k,,,,,f])=>{$('r_'+k).value=V[k];$('o_'+k).textContent=f(V[k])});
+  const r=document.documentElement.style;
+  V.gc?r.setProperty('--ok',V.gc):r.removeProperty('--ok');V.rc?r.setProperty('--bad',V.rc):r.removeProperty('--bad');
+  const tok=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+  $('gc').value=tok('--ok');$('rc').value=tok('--bad');
+  $('c').max=V.n;if(document.activeElement!==$('c'))$('c').value=V.c;
+  $('vw').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===V.view));
+}
+function showTab(){
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===V.tab));
+  TABS.forEach(k=>$('p-'+k).hidden=k!==V.tab);
+}
+function renderDock(){renderStats();renderAI()}
+function renderAll(){
+  AS=assess();renderSvg();renderDock();hint();
+  $('undo').disabled=!hist.length;$('redo').disabled=!fut.length;
+}
+document.documentElement.lang='fa';
+syncUI();showTab();renderAll();
+</script>
